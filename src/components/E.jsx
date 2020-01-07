@@ -3,6 +3,7 @@ import React, { Component } from "react";
 class E extends Component {
   // 1 - if constructor is defined in class component then this will be called FIRST or FIRST TIME COMPONENT MOUNT
 
+  // -1 Mounting Phase - Once
   constructor(props) {
     debugger;
     super(props);
@@ -10,42 +11,58 @@ class E extends Component {
       value: props.propE,
       isDataLoaded: true
     };
-
+    debugger;
+    console.log("constructor is called (this)", this);
     //Method Binding with 'this'
     this.changeValue = this.changeValue.bind(this);
   }
 
   //Start: React LifeCycle Methods -- Common React Lifecycle Methods
+  // -4 Mounting Phase - Once
   componentDidMount() {
     debugger;
-    console.log("componentDidMount() called");
-    this.setState({ isDataLoaded: true, value: this.props.propE });
+    console.log("componentDidMount() called this", this);
+    //this.setState({ isDataLoaded: true, value: this.props.propE });
   }
-
+  //-4 Updating Phase
   componentDidUpdate(prevProps, prevState) {
     debugger;
-    if (this.props.propE !== prevProps.propE) {
-      this.setState({ isDataLoaded: true, value: this.props.propE });
-    }
+    console.log("componentDidUpdate is Called (this)", this);
+    //if (this.props.propE !== prevProps.propE) {
+    //  this.setState({ isDataLoaded: true, value: this.props.propE });
+    //}
   }
   //End: React LifeCycle Methods
 
   //Start: React LifeCycle Methods -- Uncommon React Lifecycle Methods
+  //-2 Updating Phase
   shouldComponentUpdate(nextProps, nextState) {
     debugger;
-    console.log("shouldComponentUpdate is Called");
+    console.log("shouldComponentUpdate is Called (this)", this);
     return true;
   }
 
-  static getDerivedStateFromProps(props, state) {
+  // Deprecated Lifecycle Method.
+  componentWillReceiveProps(nextProps) {
     debugger;
-    console.log("getDerivedStateFromProps is Called");
+    if (nextProps.selected !== this.props.selected) {
+      this.setState({ selected: nextProps.selected });
+      this.selectNew();
+    }
   }
 
-  componentWillReceiveProps(newProps) {
+  //-2 Mounting Phase
+  //-1 Updating Phase
+  static getDerivedStateFromProps(nextProps, nextState) {
     debugger;
-    this.setState({ value: newProps.propE, valueSlider: newProps.sliderValue });
+    console.log("getDerivedStateFromProps is Called (this)", this);
+    return { value: nextProps.propE };
   }
+
+  //componentWillReceiveProps(newProps) {
+  // debugger;
+  ////this.setState({ value: newProps.propE, valueSlider: newProps.sliderValue });
+  //}
   //End: React LifeCycle Methods
 
   //Start: Component Level Methods
@@ -56,6 +73,8 @@ class E extends Component {
   }
   //End: Component Level Methods
 
+  // -3 Mounting Phase
+  // -3 Updating Phase
   render() {
     debugger;
     let { isDataLoaded } = this.state;

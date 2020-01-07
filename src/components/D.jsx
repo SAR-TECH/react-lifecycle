@@ -7,10 +7,11 @@ class D extends Component {
     this.state = { value: props.propD, sliderValue: [0, 20] };
   }
 
-  changeValue = value => {
-    debugger;
-    this.setState({ value });
-  };
+  //changeValue = value => {
+  // debugger;
+  //  this.setState({ value });
+  //};
+
   onChange = value => {
     debugger;
     this.setState({ value });
@@ -36,7 +37,7 @@ class D extends Component {
         <E
           propE={this.state.value}
           sliderValue={this.state.sliderValue}
-          changeValue={this.changeValue}
+          changeValue={this.props.changeValue}
           onChange={this.onChange}
           onReset={this.onReset}
         />

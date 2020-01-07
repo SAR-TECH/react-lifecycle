@@ -9,7 +9,7 @@ class C extends Component {
         style={{ width: 200, height: 200, background: "blue", color: "White" }}
       >
         C
-        <D propD={this.props.propC} />
+        <D propD={this.props.propC} changeValue={this.props.changeValue} />
       </div>
     );
   }
