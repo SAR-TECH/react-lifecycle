@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import B from "./B";
 import C from "./C";
 import Input from "./forms/Input";
+import ReactContext from "../context/ReactContext";
 
 class A extends Component {
   state = {
@@ -23,8 +24,10 @@ class A extends Component {
         >
           A
         </div>
-        <B />
-        <C propC={this.state.sayHello} changeValue={this.changeValue} />
+        <ReactContext.Provider value="Hello From Context">
+          <B />
+          <C propC={this.state.sayHello} changeValue={this.changeValue} />
+        </ReactContext.Provider>
       </React.Fragment>
     );
   }

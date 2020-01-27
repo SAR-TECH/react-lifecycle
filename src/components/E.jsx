@@ -1,4 +1,13 @@
 import React, { Component } from "react";
+import Service from "../services/ServiceFactory/ServiceFactory";
+import axios from "axios";
+import Modal from "react-bootstrap/Modal";
+import ProgressBar from "react-bootstrap/ProgressBar";
+import UserService from "../services/Users/UserService";
+import ReactContext from "../context/ReactContext";
+
+const FactoryBookService = Service.get("books");
+const FactoryUserService = Service.get("users");
 
 class E extends Component {
   // 1 - if constructor is defined in class component then this will be called FIRST or FIRST TIME COMPONENT MOUNT
@@ -9,20 +18,40 @@ class E extends Component {
     super(props);
     this.state = {
       value: props.propE,
-      isDataLoaded: true
+      isDataLoaded: true,
+      showProgress: false
     };
     debugger;
     console.log("constructor is called (this)", this);
     //Method Binding with 'this'
-    this.changeValue = this.changeValue.bind(this);
+    //this.changeValue = this.changeValue.bind(this);
+  }
+
+  async getData() {
+    const { data } = await FactoryBookService.get();
+    return data;
+  }
+
+  async getUserData() {
+    const response = await UserService.getAllUsers();
+    return response;
   }
 
   //Start: React LifeCycle Methods -- Common React Lifecycle Methods
   // -4 Mounting Phase - Once
   componentDidMount() {
     debugger;
+    /*axios.get("https://fakerestapi.azurewebsites.net/api/Books").then(
+      response => {
+        console.log(response);
+      },
+      error => {
+        console.log(error);
+      }
+    );
+    */
     console.log("componentDidMount() called this", this);
-    //this.setState({ isDataLoaded: true, value: this.props.propE });
+    this.setState({ isDataLoaded: true, value: this.props.propE });
   }
   //-4 Updating Phase
   componentDidUpdate(prevProps, prevState) {
@@ -43,6 +72,7 @@ class E extends Component {
   }
 
   // Deprecated Lifecycle Method.
+  /*
   componentWillReceiveProps(nextProps) {
     debugger;
     if (nextProps.selected !== this.props.selected) {
@@ -50,7 +80,7 @@ class E extends Component {
       this.selectNew();
     }
   }
-
+ */
   //-2 Mounting Phase
   //-1 Updating Phase
   static getDerivedStateFromProps(nextProps, nextState) {
@@ -66,11 +96,146 @@ class E extends Component {
   //End: React LifeCycle Methods
 
   //Start: Component Level Methods
+
   changeValue(value) {
     debugger;
     console.log("changeValue method called");
     this.setState({ value: value });
   }
+
+  getDateFromService = value => {
+    debugger;
+    this.setState({ showProgress: value });
+    this.getData()
+      .then(data => this.setState({ showProgress: false }))
+      .catch(err => console.log("Service Response", err));
+    console.log("getDateFromService method called");
+  };
+
+  getDataUsingAxios() {
+    //Automatic JSON data transformation
+    debugger;
+    const options = {
+      url: "https://fakerestapi.azurewebsites.net/api/Books",
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json; charset=UTF-8"
+      },
+      data: {
+        ID: 33,
+        Title: "Test",
+        Description: "Test",
+        PageCount: 1,
+        Excerpt: "Test",
+        PublishDate: "2020-01-14T06:20:18.222495+00:00"
+      }
+    };
+
+    axios(options)
+      .then(function(response) {
+        console.log("success", response);
+      })
+      .catch(function(error) {
+        console.log("error", error);
+      })
+      .finally(function() {
+        console.log("alway excute");
+      });
+  }
+
+  getDataUsingFetch() {
+    debugger;
+    this.getUserData()
+      .then(response => console.log("User Data", response))
+      .catch(err => console.log("Service Response", err));
+
+    /*
+    debugger;
+    const url = "https://fakerestapi.azurewebsites.net/api/Books";
+    const options = {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json; charset=UTF-8"
+      },
+      body: JSON.stringify({
+        ID: 33,
+        Title: "Test",
+        Description: "Test",
+        PageCount: 1,
+        Excerpt: "Test",
+        PublishDate: "2020-01-14T06:20:18.222495+00:00"
+      })
+    };
+
+    fetch(url, options)
+      .then(function(response) {
+        debugger;
+        console.log("fetch success", response);
+        return response.json();
+      })
+      .then(function(data) {
+        debugger;
+        console.log("fetch data", data);
+      })
+      .catch(function(error) {
+        debugger;
+        console.log("fetch error", error);
+      })
+      .finally(function() {
+        debugger;
+        console.log("fetch finally");
+      });
+      */
+  }
+  //[object_key]:[variable_name] = [default_value]
+  // destructuring make the syntax compact.
+  //ES6 and ES7 features
+  //template literals, destructuring, spread operator, arrow functions, classes
+  destructuringFeature() {
+    /*
+    //Object Destructuring...
+    const obj = {
+      name: "",
+      city: "",
+      age: 0,
+      company: "Learn TS"
+    };
+
+    //The new rest parameter syntax (...param) added in ES6
+    const { name, age, ...rest } = obj;
+    console.log(name); // Param
+    console.log(age); // 20
+    console.log(rest); // { city: 'Tallinn', company: 'Learn TS', }
+
+    // Here I am using ES6 template literals
+    //console.log(`I am ${fullname} from ${place} and I am ${years} years old.`);
+
+    //Array Destructuring...
+    // Array Of Objects
+
+    const arryNames = [{ name: "name1" }, { name: "name2" }, { name: "name3" }];
+
+    const [first, ...restOfArray] = arryNames;
+    console.log(first); // { name: 'name1' }
+    console.log(restOfArr); // [{ name: 'name2' }, { name: 'name3' }]
+    */
+    //Cloning Arrays
+    /*
+    const rainbow = [
+      "red",
+      "orange",
+      "yellow",
+      "green",
+      "blue",
+      "indigo",
+      "violet"
+    ];
+    const rainbowClone = rainbow;  
+    */
+  }
+
   //End: Component Level Methods
 
   // -3 Mounting Phase
@@ -80,17 +245,50 @@ class E extends Component {
     let { isDataLoaded } = this.state;
     //let isDataLoaded = true;
     return isDataLoaded ? (
-      <div
-        style={{ width: 100, height: 100, background: "black", color: "White" }}
-      >
-        E - {this.state != null ? this.state.value : null}
-        {/*this.props != null ? this.props.propE : null*/}
-        <input
-          type="submit"
-          value="Submit"
-          onClick={() => this.changeValue("Text From E")}
-        />
-      </div>
+      <React.Fragment>
+        <ReactContext.Consumer>{value => <p>{value}</p>}</ReactContext.Consumer>
+
+        <div
+          style={{
+            width: 100,
+            height: 100,
+            background: "black",
+            color: "White"
+          }}
+        >
+          E - {this.state != null ? this.state.value : null}
+          {
+            //this.props != null ? this.props.propE : null
+            <input
+              type="submit"
+              value="Submit"
+              onClick={() => this.props.changeValue("Text From E")}
+            />
+            /*
+          <input
+            type="button"
+            value="Get Data"
+            onClick={() => this.getDateFromService(true)}
+          />
+            */
+          }
+          <input
+            type="button"
+            value="Get Data"
+            onClick={() => this.getDataUsingFetch()}
+          />
+        </div>
+        <Modal
+          size="lg"
+          show={this.state.showProgress}
+          aria-labelledby="example-modal-sizes-title-lg"
+          centered
+        >
+          <Modal.Body>
+            <ProgressBar variant="warning" animated now={100} />
+          </Modal.Body>
+        </Modal>
+      </React.Fragment>
     ) : null;
   }
 }

@@ -35,7 +35,7 @@ class D extends Component {
           D
         </div>
         <E
-          propE={this.state.value}
+          propE={this.props.propD}
           sliderValue={this.state.sliderValue}
           changeValue={this.props.changeValue}
           onChange={this.onChange}
